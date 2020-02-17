@@ -1,0 +1,43 @@
+# -*- coding: utf-8 -*-
+import scrapy
+from edx import settings
+
+
+class CursosSpider(scrapy.Spider):
+    name = 'edx_login'
+    allowed_domains = ['edx.org', 'courses.edx.org']
+    start_urls = ['https://courses.edx.org/login?next=/dashboard']
+
+    def parse(self, response):
+        formdata = {
+            'email': settings.EDX_EMAIL,
+            'senha': settings.EDX_SENHA
+        }
+        headers = {}
+        cookies = response.headers.getlist('Set-Cookie')
+        csrf_token = ''
+        for cookie in cookies:
+            cookie = cookie.decode('utf-8')
+            if 'csrf' in cookie:
+                csrf_token = cookie.split(';')[0].split('=')[1]
+                break
+        self.log(csrf_token)
+        headers['X-CSRFToken'] = csrf_token
+        headers['X-Requested-With'] = 'XMLHttpRequest'
+        yield scrapy.FormRequest(
+            url = 'https://courses.edx.org/user_api/v1/account/login_session/',
+            method='POST',
+            formdata=formdata,
+            callback=self.parse_login,
+            headers= headers
+
+        )
+        
+    def parse_login(self,response):
+        yield scrapy.Request(
+            url='https://courses.edx.org/dashboard',
+            callback=self.parse_dashboard
+        )
+
+    def parse_dashboard(self,response):
+        self.log(response.xpath('//title/text()').extract_first())
