@@ -90,5 +90,5 @@ ITEM_PIPELINES = {
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
-MONGO_URI = 'localhost'
+MONGO_URI = #seu endereço do mongo
 MONGO_DATABASE = 'olx'

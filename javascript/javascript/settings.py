@@ -91,6 +91,6 @@ DOWNLOADER_MIDDLEWARES = {
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
-SPLASH_URL = 'http://localhost:8050/'
+SPLASH_URL = #sua url do serviço splash
 
 DUPEFILTER_CLASS = 'scrapy_splash.SplashAwareDupeFilter'
